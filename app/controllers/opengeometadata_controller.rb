@@ -46,7 +46,7 @@ class OpengeometadataController < ApplicationController
       layers = JSON.parse(File.open(json_fn).read)
       layer_path = layers[@layer_id]
       layer_path = layers[@uuid] if layer_path.nil?  
-      raise ActiveRecord::RecordNotFound.new("Layer is not registered: #{@uuid}") if layer_path.nil?
+      raise ActionController::RoutingError.new("Layer is not registered: #{@uuid}") if layer_path.nil?
     else
       # ... otherwise locate as-is
       layer_path = @layer_id
@@ -54,14 +54,14 @@ class OpengeometadataController < ApplicationController
     
     # validate that we actually hold this layer
     fn = File.join(@datadir, @institution, layer_path)
-    raise ActiveRecord::RecordNotFound.new("Layer is not available: #{@uuid}") unless File.directory?(fn)
+    raise ActionController::RoutingError.new("Layer is not available: #{@uuid}") unless File.directory?(fn)
     
     # ...and in the given format
 
     # show the layer now
     respond_to do |format|
       fn = File.join(fn, "#{@metadata_format}.#{params[:format]}")
-      raise ActiveRecord::RecordNotFound.new("Layer is not available in #{@metadata_format.upcase} format as #{params[:format].upcase}") unless File.size?(fn)
+      raise ActionController::RoutingError.new("Layer is not available in #{@metadata_format.upcase} format as #{params[:format].upcase}") unless File.size?(fn)
       
       format.xml { send_file fn, disposition: 'inline', type: 'text/xml' }
       format.html { send_file fn, disposition: 'inline', type: 'text/html' }
