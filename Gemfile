@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -37,4 +37,13 @@ gem 'spring',        group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+group :deployment do
+  gem 'capistrano', '~> 3.0'
+  gem 'capistrano-rails' # or other gems as appropriate
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler'
+  gem 'lyberteam-capistrano-devel', "~> 3.0"
+end
+
 
