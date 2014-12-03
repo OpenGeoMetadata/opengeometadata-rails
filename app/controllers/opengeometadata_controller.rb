@@ -7,7 +7,7 @@ class OpengeometadataController < ApplicationController
     @datadir = Rails.application.config.datadir || 'data'
     @institution = params[:institution] || 'institutions'
     
-    if @institution == 'institutions'
+    if @institution == 'institutions' || @institution == 'institutions.json'
       # show the available institutions
       institutions = []
       Dir.glob("#{@datadir}/{edu,com,org}.*").each do |i|
@@ -21,6 +21,8 @@ class OpengeometadataController < ApplicationController
     else
       respond_to do |format|
         json_fn = "#{@datadir}/#{@institution}/layers.json"
+        raise ActionController::RoutingError.new("Institution is not available: #{@institution}") unless File.size?(json_fn)
+        
         layers = JSON.parse(File.open(json_fn).read)
         format.json do
           send_data layers.keys.to_json, disposition: 'inline', type: 'application/json'
@@ -65,6 +67,7 @@ class OpengeometadataController < ApplicationController
       
       format.xml { send_file fn, disposition: 'inline', type: 'text/xml' }
       format.html { send_file fn, disposition: 'inline', type: 'text/html' }
+      format.json { send_file fn, disposition: 'inline', type: 'application/json' }
     end
   end
 
