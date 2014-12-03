@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'metadata/:institution' => 'opengeometadata#index', 
+  get 'metadata/:institution.:format' => 'opengeometadata#index', 
     :constraints => { :institution => /[\w\.]+/ }, 
     :defaults => { :format => 'json' }
 

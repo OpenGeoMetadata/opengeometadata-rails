@@ -7,7 +7,7 @@ class OpengeometadataController < ApplicationController
     @datadir = Rails.application.config.datadir || 'data'
     @institution = params[:institution] || 'institutions'
     
-    if @institution == 'institutions' || @institution == 'institutions.json'
+    if @institution == 'institutions'
       # show the available institutions
       institutions = []
       Dir.glob("#{@datadir}/{edu,com,org}.*").each do |i|
