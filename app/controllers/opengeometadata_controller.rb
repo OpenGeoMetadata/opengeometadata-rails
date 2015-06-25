@@ -47,7 +47,8 @@ class OpengeometadataController < ApplicationController
     if File.size?(json_fn)
       layers = JSON.parse(File.open(json_fn).read)
       layer_path = layers[@layer_id]
-      layer_path = layers[@uuid] if layer_path.nil?  
+      layer_path = layers[@uuid] if layer_path.nil? && !layers[@uuid].nil?
+      layer_path = layers['druid:' + @layer_id] if layer_path.nil? && !layers['druid:' + @layer_id].nil?
       raise ActionController::RoutingError.new("Layer is not registered: #{@uuid}") if layer_path.nil?
     else
       # ... otherwise locate as-is
